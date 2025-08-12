@@ -13,13 +13,34 @@ import { CreateUserDto } from './dtos/create-user-dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get('{/:id}/')
+  @ApiOperation({
+    summary: 'Fetch all users',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'number',
+    example: 10,
+    description: 'limit users',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: 'number',
+    example: 1,
+    description: 'page',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched Successfuly',
+  })
   getUsers(
     @Param() getUserParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
