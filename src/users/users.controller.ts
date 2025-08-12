@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -27,6 +29,12 @@ export class UsersController {
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
+    return 'success';
+  }
+
+  @Patch()
+  updateUser(@Body() updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto);
     return 'success';
   }
 }
