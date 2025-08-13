@@ -1,4 +1,4 @@
-export enum statusType {
+export enum PostStatusType {
   'DRAFT' = 'draft',
   'SCHEDULED' = 'scheduled',
   'REVIEW' = 'review',
