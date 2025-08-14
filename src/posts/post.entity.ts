@@ -8,7 +8,6 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  
   @Column({
     type: 'varchar',
     length: 512,
