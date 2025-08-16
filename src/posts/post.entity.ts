@@ -1,7 +1,7 @@
 import {
   Column,
   Entity,
-  JoinTable,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -75,7 +75,8 @@ export class Post {
 
   @OneToOne(() => MetaOption, {
     cascade: true,
+    eager: true,
   })
-  @JoinTable()
+  @JoinColumn()
   metaOptions?: MetaOption;
 }

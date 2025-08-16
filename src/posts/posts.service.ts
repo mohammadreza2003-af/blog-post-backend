@@ -21,15 +21,8 @@ export class PostsService {
     return this.postRepository.save(post);
   }
 
-  findAll(id: number) {
-    const user = this.userService.findOneById(id);
-    console.log(id);
-    return [
-      {
-        user,
-        title: 'test',
-        content: 'rest',
-      },
-    ];
+  async findAll(id: number) {
+    // const user = this.userService.findOneById(id);
+    return await this.postRepository.find();
   }
 }
