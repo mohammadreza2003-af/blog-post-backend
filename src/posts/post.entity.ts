@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToOne,
@@ -85,6 +86,7 @@ export class Post {
   })
   author: User;
 
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, { eager: true })
+  @JoinTable()
   tags?: Tag[];
 }
