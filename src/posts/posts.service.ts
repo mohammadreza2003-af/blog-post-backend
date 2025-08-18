@@ -26,13 +26,7 @@ export class PostsService {
     return await this.postRepository.find();
   }
   async deletePost(id: number) {
-    const post = await this.postRepository.findOneBy({ id });
-    if (post) {
-      await this.postRepository.delete({ id });
-
-      if (post.metaOptions)
-        await this.metaOptionsRepository.delete(post?.metaOptions?.id);
-    }
+    await this.postRepository.delete({ id });
     return { deleted: true, id };
   }
 }
