@@ -66,11 +66,6 @@ export class UsersService {
     Get user by id
   */
   findOneById(id: number) {
-    console.log(id);
-
-    return {
-      firstName: 'Ali',
-      lastName: 'Ebrahimi',
-    };
+    return this.userRepository.findOneBy({ id });
   }
 }
