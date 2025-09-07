@@ -6,6 +6,7 @@ import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { Post } from './post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from 'src/tags/providers/tags.service';
+import { UpdatePostDto } from './dtos/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -37,6 +38,30 @@ export class PostsService {
   async findAll(id: number) {
     return await this.postRepository.find();
   }
+
+  async updatePost(updatePostDto: UpdatePostDto) {
+    const tags =
+      updatePostDto.tags &&
+      (await this.tagsService.findMultiTags(updatePostDto.tags));
+
+    const post = await this.postRepository.findOneBy({
+      id: updatePostDto.id,
+    });
+
+    if (post) {
+      post.title = updatePostDto.title ?? post?.title;
+      post.content = updatePostDto.content ?? post?.content;
+      post.featuredImageUrl =
+        updatePostDto.featuredImageUrl ?? post?.featuredImageUrl;
+      post.postType = updatePostDto.postType ?? post?.postType;
+      post.slug = updatePostDto.slug ?? post?.slug;
+      post.status = updatePostDto.status ?? post?.status;
+      post.publishOn = updatePostDto.publishOn ?? post?.publishOn;
+      post.tags = tags;
+      return await this.postRepository.save(post);
+    }
+  }
+
   async deletePost(id: number) {
     await this.postRepository.delete({ id });
     return { deleted: true, id };
