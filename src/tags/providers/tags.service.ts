@@ -21,4 +21,11 @@ export class TagsService {
     });
     return listTags;
   }
+  async deleteTag(id: number) {
+    await this.tagsRepository.delete(id);
+    return {
+      delete: true,
+      id,
+    };
+  }
 }
