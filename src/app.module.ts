@@ -6,8 +6,10 @@ import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagsModule } from './tags/tags.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
+
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
@@ -16,17 +18,20 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ENV ? `.env.${ENV}` : '.env',
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         autoLoadEntities: true,
         synchronize: true,
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'blog-post',
-        host: 'localhost',
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        host: configService.get('DB_HOST'),
       }),
     }),
     TagsModule,

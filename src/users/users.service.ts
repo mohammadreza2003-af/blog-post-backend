@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user-dto';
+import { ConfigService } from '@nestjs/config';
 
 /**
   Users servies
@@ -19,7 +20,7 @@ export class UsersService {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-
+    private readonly configService: ConfigService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -50,6 +51,7 @@ export class UsersService {
   findAll(getUserParamDto: GetUsersParamDto, limit: number, page: number) {
     console.log(getUserParamDto, limit, page);
     console.log(this.authService.isAuth());
+    console.log(this.configService.get('TEST'));
     return [
       {
         firstName: 'Ali',
