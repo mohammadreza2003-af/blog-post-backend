@@ -10,7 +10,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user-dto';
-import { ConfigService } from '@nestjs/config';
+import * as config from '@nestjs/config';
+import profileConfig from './config/profile.config';
 
 /**
   Users servies
@@ -20,9 +21,13 @@ export class UsersService {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+    private readonly configService: config.ConfigService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(profileConfig.KEY)
+    private readonly profileConfiguration: config.ConfigType<
+      typeof profileConfig
+    >,
   ) {}
 
   /** 
