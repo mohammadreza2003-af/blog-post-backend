@@ -56,7 +56,7 @@ export class UsersService {
   findAll(getUserParamDto: GetUsersParamDto, limit: number, page: number) {
     console.log(getUserParamDto, limit, page);
     console.log(this.authService.isAuth());
-    console.log(this.configService.get('TEST'));
+    console.log(this.configService.get('PROFILEKEY'));
     return [
       {
         firstName: 'Ali',
