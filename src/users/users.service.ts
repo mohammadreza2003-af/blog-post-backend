@@ -1,8 +1,11 @@
 import {
-  ConflictException,
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  RequestTimeoutException,
 } from '@nestjs/common';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { AuthService } from 'src/auth/auth.service';
@@ -36,15 +39,33 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
-    const user = await this.userRepository.findOne({ where: { email } });
-
-    if (user) {
-      throw new ConflictException('User is already exists!');
+    let existingUser: User | null = null;
+    try {
+      existingUser = await this.userRepository.findOne({ where: { email } });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request right now. Please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
     }
 
-    let newUser = this.userRepository.create(createUserDto);
-
-    newUser = await this.userRepository.save(newUser);
+    if (existingUser) {
+      throw new BadRequestException('User is already exists!');
+    }
+    let newUser: User | null = null;
+    try {
+      newUser = this.userRepository.create(createUserDto);
+      newUser = await this.userRepository.save(newUser);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request right now. Please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
 
     return newUser;
   }
@@ -72,7 +93,19 @@ export class UsersService {
   /**
     Get user by id
   */
-  findOneById(id: number) {
-    return this.userRepository.findOneBy({ id });
+  async findOneById(id: number) {
+    let user: User | null = null;
+    try {
+      user = await this.userRepository.findOneBy({ id });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request right now. Please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
+    if (!user) throw new BadRequestException('The user id does not exist');
+    return user;
   }
 }
