@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   forwardRef,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -75,19 +77,19 @@ export class UsersService {
   */
 
   findAll(getUserParamDto: GetUsersParamDto, limit: number, page: number) {
-    console.log(getUserParamDto, limit, page);
-    console.log(this.authService.isAuth());
-    console.log(this.configService.get('PROFILEKEY'));
-    return [
+    throw new HttpException(
       {
-        firstName: 'Ali',
-        lastName: 'Ebrahimi',
+        status: HttpStatus.MOVED_PERMANENTLY,
+        error: 'The API endpoint does not exists',
+        fileName: 'users.service.ts',
+        lineNumber: 85,
       },
+      HttpStatus.MOVED_PERMANENTLY,
       {
-        firstName: 'Nasro',
-        lastName: 'Karimi',
+        cause: new Error(),
+        description: 'Occured because the API endpoint was permanently moved',
       },
-    ];
+    );
   }
 
   /**
