@@ -17,6 +17,7 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user-dto';
 import * as config from '@nestjs/config';
 import profileConfig from './config/profile.config';
+import { UsersCreateManyProvider } from './providers/users-create-many.provider';
 
 /**
   Users servies
@@ -39,6 +40,11 @@ export class UsersService {
      */
 
     private readonly dataSource: DataSource,
+
+    /**
+     * Inject UsersCreateManyProvider
+     */
+    private readonly userCreateMany: UsersCreateManyProvider,
   ) {}
 
   /** 
@@ -116,26 +122,7 @@ export class UsersService {
     if (!user) throw new BadRequestException('The user id does not exist');
     return user;
   }
-
-  async createMany(createUserDto: CreateUserDto[]) {
-    const newUsers: CreateUserDto[] = [];
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-
-    await queryRunner.startTransaction();
-
-    try {
-      for (const user of createUserDto) {
-        const newUser = queryRunner.manager.create(User, user);
-        const result = await queryRunner.manager.save(newUser);
-        newUsers.push(result);
-      }
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-    } finally {
-      await queryRunner.release();
-    }
+  public async createMany(createUserDto: CreateUserDto[]): Promise<User[]> {
+    return await this.userCreateMany.createMany(createUserDto);
   }
 }

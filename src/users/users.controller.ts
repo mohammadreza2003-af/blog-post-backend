@@ -55,6 +55,11 @@ export class UsersController {
     return this.userService.createUser(createUserDto);
   }
 
+  @Post('create-many')
+  createManyUsers(@Body() createUsersDto: CreateUserDto[]): Promise<User[]> {
+    return this.userService.createMany(createUsersDto);
+  }
+
   @Patch()
   updateUser(@Body() updateUserDto: UpdateUserDto) {
     console.log(updateUserDto);
