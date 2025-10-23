@@ -18,6 +18,7 @@ import { CreateUserDto } from './dtos/create-user-dto';
 import * as config from '@nestjs/config';
 import profileConfig from './config/profile.config';
 import { UsersCreateManyProvider } from './providers/users-create-many.provider';
+import { CreateManyUsersDto } from './dtos/create-many-users.dto';
 
 /**
   Users servies
@@ -122,7 +123,9 @@ export class UsersService {
     if (!user) throw new BadRequestException('The user id does not exist');
     return user;
   }
-  public async createMany(createUserDto: CreateUserDto[]): Promise<User[]> {
-    return await this.userCreateMany.createMany(createUserDto);
+  public async createMany(
+    createManyUsersDto: CreateManyUsersDto,
+  ): Promise<User[]> {
+    return await this.userCreateMany.createMany(createManyUsersDto);
   }
 }
